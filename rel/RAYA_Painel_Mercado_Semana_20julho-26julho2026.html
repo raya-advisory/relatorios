@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raya Advisory — Painel de Mercado · 20/07 a 26/07/2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ────────────────────────────────────────────────────────────
+   RAYA ADVISORY · PAINEL DE MERCADO · DESIGN SYSTEM
+   ──────────────────────────────────────────────────────────── */
+:root {
+  /* PALETA */
+  --raya-dark:        #122028;
+  --raya-navy:        #20353A;
+  --raya-slate:       #364F53;
+  --raya-teal:        #1D9492;
+  --raya-teal-light:  #07C0BD;
+  --raya-copper:      #BE620F;
+  --raya-copper-mid:  #B0742A;
+  --raya-rust:        #993715;
+  --raya-deep-rust:   #651F0B;
+  --raya-gold:        #B59875;
+  --raya-cream:       #F0EEE6;
+
+  /* FONT */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  /* SHADOWS */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.18);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.22);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.28);
+
+  /* RADIUS */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* TIPOGRAFIA BASE (aumentada — era 14px nos templates antigos) */
+  --fs-base: 16px;
+  --fs-sm:   14px;
+  --fs-xs:   12px;
+  --fs-eyebrow: 12px;
+  --fs-kpi-value: 36px;
+  --fs-title:    40px;
+  --scale: 1;
+}
+
+/* ───── TEMA ESCURO (padrão) ───── */
+:root[data-theme="dark"] {
+  --bg:         var(--raya-dark);
+  --bg-elev:    var(--raya-navy);
+  --bg-card:    #1A2C32;
+  --bg-card-2:  #243A40;
+  --text:       var(--raya-cream);
+  --text-2:     #B8BDB9;
+  --text-3:     #8A938F;
+  --border:     rgba(29,148,146,.22);
+  --border-soft:rgba(255,255,255,.06);
+  --kpi-up:     #07C0BD;
+  --kpi-down:   #E05555;
+  --kpi-neutral:#E5E1D5;
+}
+
+/* ───── TEMA CLARO ───── */
+:root[data-theme="light"] {
+  --bg:         #E6E4DB;
+  --bg-elev:    #EDEAE0;
+  --bg-card:    #F2EFE5;
+  --bg-card-2:  #FFFFFF;
+  --text:       #122028;
+  --text-2:     #364F53;
+  --text-3:     #6B7B7E;
+  --border:     rgba(18,32,40,.12);
+  --border-soft:rgba(18,32,40,.06);
+  --kpi-up:     #1D9492;
+  --kpi-down:   #993715;
+  --kpi-neutral:#122028;
+}
+
+/* ───── PRESENTATION MODE (+30% scale, centra 1400px) ───── */
+:root[data-presentation="on"] {
+  --scale: 1.18;
+  --fs-base: 19px;
+  --fs-sm:   17px;
+  --fs-xs:   14px;
+  --fs-eyebrow: 14px;
+  --fs-kpi-value: 46px;
+  --fs-title:    52px;
+}
+
+* , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--fs-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  transition: background .3s, color .3s;
+  /* ZOOM DINÂMICO — escala proporcionalmente todo o painel */
+  zoom: var(--zoom, 1);
+  -moz-transform: scale(var(--zoom, 1));
+  -moz-transform-origin: 0 0;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.header-logo svg { height: 44px; width: auto; display: block; }
+.header-meta { text-align: right; }
+.header-title {
+  font-family: var(--font-display);
+  font-size: calc(20px * var(--scale));
+  color: var(--text);
+  font-weight: 500;
+  letter-spacing: .02em;
+}
+.header-date {
+  font-size: var(--fs-xs);
+  color: var(--raya-teal-light);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.header-controls {
+  display: flex;
+  gap: 8px;
+}
+.ctrl-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ctrl-btn:hover { border-color: var(--raya-teal); color: var(--text); }
+.ctrl-btn.active { background: var(--raya-teal); border-color: var(--raya-teal); color: #fff; }
+
+/* ─── ZOOM CONTROLS ─── */
+.zoom-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.zoom-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  width: 34px;
+  height: 34px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.zoom-btn:hover { background: var(--raya-teal); color: #fff; }
+.zoom-btn:active { transform: scale(0.95); }
+.zoom-btn.minus { border-right: 1px solid var(--border); }
+.zoom-btn.plus  { border-left:  1px solid var(--border); }
+.zoom-indicator {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: .04em;
+  min-width: 48px;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.zoom-indicator:hover { color: var(--raya-teal-light); }
+
+/* ─── NAV (abas) ─── */
+.nav {
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 16px 22px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--raya-teal-light); border-bottom-color: var(--raya-teal-light); }
+
+/* ─── LAYOUT ─── */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+}
+.section { display: none; }
+.section.active { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ─── EYEBROW & TITLES ─── */
+.eyebrow {
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--raya-teal-light);
+  margin-bottom: 8px;
+}
+.sec-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.sec-desc {
+  font-size: var(--fs-sm);
+  color: var(--text-3);
+  max-width: 720px;
+  margin-bottom: 28px;
+  line-height: 1.75;
+}
+.divider {
+  height: 1px;
+  background: linear-gradient(to right, var(--raya-gold), transparent);
+  margin-bottom: 28px;
+  opacity: .4;
+}
+
+/* ─── ALERT BANNER ─── */
+.alert-banner {
+  background: linear-gradient(135deg, var(--raya-rust), var(--raya-deep-rust));
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 18px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: var(--shadow-md);
+}
+.alert-banner.teal { background: linear-gradient(135deg, var(--raya-teal), #126D6C); }
+.alert-banner.copper { background: linear-gradient(135deg, var(--raya-copper), var(--raya-copper-mid)); }
+.alert-banner.navy { background: linear-gradient(135deg, var(--raya-navy), var(--raya-slate)); }
+.alert-icon { font-size: 22px; line-height: 1; }
+.alert-text { font-size: var(--fs-sm); line-height: 1.6; }
+.alert-text strong {
+  display: block;
+  font-size: calc(var(--fs-sm) + 2px);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+/* ─── KPI GRID ─── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px 18px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s, border-color .2s;
+}
+.kpi-card:hover { transform: translateY(-2px); border-color: var(--raya-teal); }
+.kpi-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--raya-teal);
+}
+.kpi-card.up::before    { background: var(--kpi-up); }
+.kpi-card.down::before  { background: var(--kpi-down); }
+.kpi-card.amber::before { background: var(--raya-copper-mid); }
+.kpi-card.gold::before  { background: var(--raya-gold); }
+.kpi-card.navy::before  { background: var(--raya-slate); }
+
+.kpi-label {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 10px;
+}
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-kpi-value);
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-value.up    { color: var(--kpi-up); }
+.kpi-value.down  { color: var(--kpi-down); }
+.kpi-sub {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  margin-top: 8px;
+}
+.kpi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-top: 8px;
+}
+.kpi-badge.up    { background: rgba(7,192,189,.15); color: var(--kpi-up); }
+.kpi-badge.down  { background: rgba(224,85,85,.15); color: var(--kpi-down); }
+.kpi-badge.neutral { background: rgba(181,152,117,.15); color: var(--raya-gold); }
+
+/* ─── NEWS CARDS ─── */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+.news-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--raya-gold);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  transition: transform .2s, border-color .2s;
+}
+.news-card:hover { transform: translateY(-2px); }
+.news-card.alert     { border-left-color: var(--raya-rust); }
+.news-card.highlight { border-left-color: var(--raya-teal-light); }
+.news-card.political { border-left-color: var(--raya-copper-mid); }
+.news-card.geo       { border-left-color: var(--raya-deep-rust); }
+
+.news-date {
+  font-size: var(--fs-xs);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.news-title {
+  font-family: var(--font-display);
+  font-size: calc(20px * var(--scale));
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.news-body {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  line-height: 1.7;
+}
+.news-source {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  margin-top: 12px;
+  letter-spacing: .1em;
+  font-style: italic;
+}
+
+/* ─── BLOCO DE IMPACTO (a marca da análise em cada card) ─── */
+.news-impact {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--raya-teal);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  line-height: 1.65;
+}
+.news-impact::before {
+  content: 'IMPACTO ▸ ';
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--raya-teal-light);
+}
+
+/* ─── LÍVIO / BRCG BOX (DESTAQUE ESPECIAL) ─── */
+.livio-box {
+  background: linear-gradient(135deg, rgba(29,148,146,.12), rgba(7,192,189,.06));
+  border: 1px solid var(--raya-teal);
+  border-left: 5px solid var(--raya-teal-light);
+  border-radius: var(--radius-md);
+  padding: 18px 22px;
+  margin: 16px 0;
+  position: relative;
+}
+.livio-box::before {
+  content: '◆ BRCG';
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  background: var(--bg);
+  color: var(--raya-teal-light);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .18em;
+  padding: 2px 10px;
+}
+.livio-label {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--raya-teal-light);
+  margin-bottom: 8px;
+}
+.livio-text {
+  font-size: var(--fs-sm);
+  color: var(--text);
+  line-height: 1.7;
+  font-style: italic;
+}
+.livio-disclaimer {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  margin-top: 10px;
+  font-style: normal;
+}
+
+/* ─── FOCUS / CURVE GRID ─── */
+.focus-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.focus-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.focus-header {
+  background: var(--bg-card-2);
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.focus-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--fs-sm);
+}
+.focus-row:last-child { border-bottom: none; }
+.focus-year { color: var(--text-3); }
+.focus-val {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.focus-arrow {
+  font-size: var(--fs-xs);
+  margin-left: 6px;
+}
+.focus-arrow.up   { color: var(--kpi-down); }
+.focus-arrow.down { color: var(--kpi-up); }
+.focus-arrow.flat { color: var(--text-3); }
+.focus-arrow.good-up  { color: var(--kpi-up); }   /* PIB subindo = bom */
+.focus-arrow.bad-down { color: var(--kpi-down); } /* PIB caindo = ruim */
+
+.curve-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.curve-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-align: center;
+}
+.curve-label {
+  font-size: var(--fs-xs);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+.curve-val {
+  font-family: var(--font-display);
+  font-size: calc(26px * var(--scale));
+  font-weight: 500;
+  color: var(--kpi-down);
+  font-variant-numeric: tabular-nums;
+}
+.curve-prev {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+/* ─── INDICATOR TABLE COM SPARKLINES ─── */
+.table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-md);
+}
+.asset-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.asset-table thead { background: var(--bg-card-2); }
+.asset-table thead th {
+  padding: 14px 16px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.asset-table thead th:not(:first-child):not(.sparkline-th) { text-align: right; }
+.asset-table thead th.sparkline-th { text-align: center; width: 120px; }
+.asset-table tbody tr { border-bottom: 1px solid var(--border-soft); }
+.asset-table tbody tr:last-child { border-bottom: none; }
+.asset-table tbody tr:hover { background: rgba(29,148,146,.04); }
+.asset-table td {
+  padding: 14px 16px;
+  color: var(--text-2);
+  vertical-align: middle;
+}
+.asset-table td:not(:first-child):not(.sparkline-td) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.asset-table td.sparkline-td { text-align: center; }
+.asset-table .row-group { background: rgba(29,148,146,.08); }
+.asset-table .row-group td {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--raya-teal-light);
+  padding: 10px 16px;
+}
+.asset-name {
+  font-weight: 600;
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+.rate-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+.rate-badge.teal   { background: rgba(7,192,189,.18); color: var(--raya-teal-light); }
+.rate-badge.amber  { background: rgba(176,116,42,.18); color: var(--raya-copper-mid); }
+.pct.up   { color: var(--kpi-up);   font-weight: 600; }
+.pct.down { color: var(--kpi-down); font-weight: 600; }
+.pct.flat { color: var(--text-3); }
+.pct.good-down { color: var(--kpi-up); font-weight: 600; } /* queda benigna: USD/BRL apreciando, curva DI fechando */
+.sparkline-svg { display: inline-block; vertical-align: middle; }
+
+/* ─── LEITURAS DA SEMANA ─── */
+.reading-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.reading-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--raya-teal-light);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+}
+.reading-card.rv { border-left-color: var(--raya-copper-mid); }
+.reading-card.cambio { border-left-color: var(--raya-gold); }
+.reading-title {
+  font-family: var(--font-display);
+  font-size: calc(20px * var(--scale));
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.reading-body {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+/* ─── POLITICAL / TAG ─── */
+.political-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.political-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 22px;
+}
+.political-title {
+  font-family: var(--font-display);
+  font-size: calc(22px * var(--scale));
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.tag {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-right: 6px;
+  margin-bottom: 4px;
+}
+.tag.rust  { background: rgba(153,55,21,.18); color: #E68A6A; }
+.tag.teal  { background: rgba(7,192,189,.18); color: var(--raya-teal-light); }
+.tag.amber { background: rgba(176,116,42,.18); color: var(--raya-copper-mid); }
+.tag.navy  { background: rgba(54,79,83,.5); color: var(--text-2); }
+.bullet-list {
+  list-style: none;
+  margin-top: 12px;
+}
+.bullet-list li {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  line-height: 1.65;
+  padding: 8px 0 8px 18px;
+  position: relative;
+  border-bottom: 1px solid var(--border-soft);
+}
+.bullet-list li:last-child { border-bottom: none; }
+.bullet-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--raya-gold);
+  font-weight: 700;
+}
+
+/* ─── TIMELINE (DIA A DIA) ─── */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin-bottom: 28px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--raya-teal), var(--raya-gold), transparent);
+  opacity: .4;
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--raya-teal-light);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--raya-teal);
+}
+.tl-date {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--raya-teal-light);
+  margin-bottom: 6px;
+}
+.tl-title {
+  font-family: var(--font-display);
+  font-size: calc(20px * var(--scale));
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.tl-body {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+/* ─── POLL BAR ─── */
+.poll-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 22px;
+  margin-bottom: 18px;
+}
+.poll-title {
+  font-family: var(--font-display);
+  font-size: calc(22px * var(--scale));
+  font-weight: 500;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+.poll-row { margin-bottom: 12px; }
+.poll-name {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-sm);
+  margin-bottom: 5px;
+  color: var(--text);
+}
+.poll-name span:last-child { font-weight: 600; }
+.poll-bar-bg {
+  background: var(--border);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+.poll-bar-fill { height: 100%; border-radius: 999px; transition: width .8s ease; }
+.poll-bar-fill.c1 { background: var(--raya-rust); }
+.poll-bar-fill.c2 { background: var(--raya-navy); }
+.poll-bar-fill.c3 { background: var(--raya-teal); }
+.poll-bar-fill.c4 { background: var(--raya-copper-mid); }
+
+/* ─── FOOTER ─── */
+.footer {
+  background: var(--bg-elev);
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+  padding: 24px 32px;
+}
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: calc(18px * var(--scale));
+  color: var(--text-2);
+}
+.footer-disc {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .focus-grid, .political-grid, .news-grid { grid-template-columns: 1fr; }
+  .header-inner, .nav-inner, .main { padding-left: 16px; padding-right: 16px; }
+}
+@media (max-width: 600px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .header-meta .header-title { font-size: 16px; }
+  :root { --fs-title: 28px; --fs-kpi-value: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo" aria-label="Raya Advisory">
+      <!-- LOGO_SVG_INLINE -->
+      <svg viewBox="0 0 220 56" width="220" height="56" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="rayaGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1D9492"/>
+            <stop offset="100%" stop-color="#07C0BD"/>
+          </linearGradient>
+        </defs>
+        <text x="0" y="32" font-family="'Cormorant Garamond', Georgia, serif" font-size="34" font-weight="500" letter-spacing="6" fill="url(#rayaGradient)">RAYA</text>
+        <line x1="0" y1="40" x2="120" y2="40" stroke="#B59875" stroke-width="1" opacity="0.6"/>
+        <text x="0" y="52" font-family="'DM Sans', system-ui, sans-serif" font-size="8" letter-spacing="3" fill="#B59875" opacity="0.9">A D V I S O R Y</text>
+      </svg>
+    </div>
+
+    <div class="header-meta">
+      <div class="header-title">Painel de Mercado Semanal</div>
+      <div class="header-date">SEMANA DE 20 A 26 DE JULHO DE 2026</div>
+    </div>
+
+    <div class="header-controls">
+      <div class="zoom-group" title="Ajustar zoom (atalhos: +, −, 0 reseta)">
+        <button class="zoom-btn minus" id="zoom-out" aria-label="Diminuir zoom">A−</button>
+        <span class="zoom-indicator" id="zoom-val" title="Clique para resetar (100%)">100%</span>
+        <button class="zoom-btn plus" id="zoom-in" aria-label="Aumentar zoom">A+</button>
+      </div>
+      <button class="ctrl-btn" id="theme-toggle" title="Alternar tema claro/escuro">
+        <span id="theme-icon">☾</span> <span id="theme-label">Claro</span>
+      </button>
+      <button class="ctrl-btn" id="present-toggle" title="Modo Apresentação (zoom 140% + tela cheia)">
+        ▣ Apresentação
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- NAV (abas geradas dinamicamente) -->
+<nav class="nav">
+  <div class="nav-inner" id="tabs">
+    <button class="nav-btn active" onclick="showTab('visao-geral', this)">Visão Geral</button>
+<button class="nav-btn" onclick="showTab('indicadores', this)">Indicadores</button>
+<button class="nav-btn" onclick="showTab('macro-brasil', this)">Macro Brasil</button>
+<button class="nav-btn" onclick="showTab('macro-global', this)">Macro Global</button>
+<button class="nav-btn" onclick="showTab('geopolitica', this)">Geopolítica &amp; Petróleo</button>
+<button class="nav-btn" onclick="showTab('politica-brasil', this)">Política Brasil</button>
+<button class="nav-btn" onclick="showTab('resultados', this)">Resultados</button>
+
+  </div>
+</nav>
+
+<main class="main" id="content">
+  <section class="section active" id="visao-geral">
+  <div class="eyebrow">Semana de 20 a 26 de julho de 2026</div>
+  <h2 class="sec-title">Visão Geral</h2>
+  <p class="sec-desc">O barril a três dígitos, o corte de setembro fora da curva e um Brasil que, pela primeira vez no choque, jogou do outro lado.</p>
+  <div class="divider"></div>
+
+  <div class="alert-banner navy">
+    <div class="alert-icon">◆</div>
+    <div class="alert-text"><strong>A realidade bate à porta</strong>
+    O Brent bateu US$ 100 e fechou a semana a US$ 96,78, acumulando 9,85% em cinco dias e 59,05% no ano. As apostas de alta do Fed em setembro passaram de 46,9% para mais de 80%, o BCE praticamente contratou um aperto e a curva de DI eliminou o corte da Selic de setembro. O Brasil descolou no índice e no câmbio — mas pagou no vértice longo, com as taxas reais das NTN-B abrindo pela segunda semana seguida.</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card up">
+      <div class="kpi-label">Ibovespa</div>
+      <div class="kpi-value">174.042</div>
+      <span class="kpi-badge up">▲ +0,19% na semana</span>
+      <div class="kpi-sub">Fechamento sexta 24/07</div>
+    </div>
+    <div class="kpi-card down">
+      <div class="kpi-label">S&amp;P 500</div>
+      <div class="kpi-value">7.411,99</div>
+      <span class="kpi-badge down">▼ −0,61% na semana</span>
+      <div class="kpi-sub">Fechamento sexta 24/07</div>
+    </div>
+    <div class="kpi-card up">
+      <div class="kpi-label">USD/BRL</div>
+      <div class="kpi-value">R$ 5,0666</div>
+      <span class="kpi-badge up">▼ −1,00% na semana</span>
+      <div class="kpi-sub">PTAX de venda, sexta 24/07</div>
+    </div>
+    <div class="kpi-card up">
+      <div class="kpi-label">Brent</div>
+      <div class="kpi-value">US$ 96,78</div>
+      <span class="kpi-badge up">▲ +9,85% na semana</span>
+      <div class="kpi-sub">Tocou US$ 100 na quinta 23/07</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">DI Jan/33</div>
+      <div class="kpi-value">14,690%</div>
+      <span class="kpi-badge down">▲ +9,0 bps na semana</span>
+      <div class="kpi-sub">Máxima de 14,880% na quinta 23/07</div>
+    </div>
+    <div class="kpi-card navy">
+      <div class="kpi-label">NTN-B 2035 (taxa real)</div>
+      <div class="kpi-value">8,17%</div>
+      <span class="kpi-badge down">▲ +10,0 bps na semana</span>
+      <div class="kpi-sub">Anbima, fechamento de 24/07</div>
+    </div>
+  </div>
+
+  <div class="news-grid">
+    <div class="news-card">
+      <div class="news-date">Qua · 22/07</div>
+      <div class="news-title">Fluxo estrangeiro volta à B3 e o real chega ao menor nível em dois meses</div>
+      <div class="news-body">Depois de dois meses de saída, julho reverteu a tendência: entraram R$ 4,7 bilhões no mês até então, elevando o saldo do ano a R$ 38,6 bilhões, com quatro pregões seguidos de ingresso e uma entrada de R$ 2,4 bilhões em um único dia. O petróleo caro melhora os termos de troca de um país exportador da commodity.</div>
+      <div class="news-impact">Na quarta, o Ibovespa disparou 2,44%, aos 177.547 pontos, e o dólar recuou a R$ 5,0517, menor patamar em quase dois meses — movimento oposto ao da semana anterior, quando o mesmo choque derrubou tudo em bloco.</div>
+    </div>
+    <div class="news-card alert">
+      <div class="news-date">Qui · 23/07</div>
+      <div class="news-title">Brent bate US$ 100 com ameaça simultânea a Ormuz e Bab el-Mandeb</div>
+      <div class="news-body">O salto de mais de 6% refletiu o risco de colapso das duas principais rotas de exportação do Oriente Médio: antes da guerra, cerca de 25% do petróleo transportado por via marítima passava por Ormuz e outros 5% por Bab el-Mandeb. Foi a 13ª noite consecutiva de ataques americanos contra o Irã. Três semanas antes, o barril estava abaixo de US$ 70.</div>
+      <div class="news-impact">O CME passou a mostrar mais de 80% de probabilidade de alta do Fed em setembro, a Treasury de 10 anos operou acima de 4,7% pela primeira vez em um ano e meio e a curva de DI eliminou a expectativa de corte da Selic em setembro — o Jan/33 chegou a 14,880%.</div>
+    </div>
+    <div class="news-card highlight">
+      <div class="news-date">Qui · 23/07</div>
+      <div class="news-title">BCE mantém juros em 2,25% e Lagarde revela dirigentes favoráveis a alta</div>
+      <div class="news-body">A decisão de manter a taxa de depósito foi unânime, mas na entrevista a presidente do BCE revelou que alguns dirigentes defenderam elevação já naquela reunião, e apontou perspectiva de inflação acima da meta até pelo menos meados de 2027. O comunicado reconheceu que o impacto inflacionário integral do choque de energia ainda não se materializou.</div>
+      <div class="news-impact">Mesmo com o tom mais duro, o euro caiu 0,27%, a US$ 1,1378, porque o petróleo dominou a cena e puxou o dólar: o DXY subiu 0,32%, aos 101,444 pontos.</div>
+    </div>
+    <div class="news-card political">
+      <div class="news-date">Qui · 23/07</div>
+      <div class="news-title">Nova tarifa de 12,5% é cumulativa e leva a sobretaxa a 37,5%</div>
+      <div class="news-body">O USTR confirmou a alíquota adicional para 60 parceiros comerciais, e o Brasil ficou no grupo sujeito ao teto de 12,5%, cumulativo com os 25% da semana anterior para grande parte das exportações. Uma lista de 471 produtos ficou isenta, incluindo café, petróleo, gás, fertilizantes, madeira, carnes e medicamentos. O governo decidiu acionar a Lei da Reciprocidade.</div>
+      <div class="news-impact">A Abimaq projetou queda de até 11% nas exportações de máquinas e equipamentos aos Estados Unidos. O Ibovespa perdeu os 177 mil pontos na quinta, caindo 0,46%, aos 176.723 pontos.</div>
+    </div>
+    </div>
+
+  <div class="livio-box">
+    <div class="livio-label">Leitura BRCG — Fiscal</div>
+    <div class="livio-text">Nossos economistas indicam que a ideia de reduzir alíquotas para aumentar a arrecadação, que voltou ao debate eleitoral, não encontra respaldo no caso brasileiro. A avaliação é que a Curva de Laffer tem fragilidades severas — teóricas e empíricas — sobretudo em economias desiguais e com sistema tributário de múltiplos impostos e fatos geradores, e que a literatura aplicada ao Brasil é limitada e de baixo rigor metodológico, com os trabalhos mais robustos indicando alíquotas brasileiras abaixo do ponto de maximização. A leitura é que levar esse argumento adiante agravaria a percepção de risco em um momento de fragilidade fiscal reconhecida.</div>
+    <div class="livio-disclaimer">Leitura do nosso economista interno (Lívio Ribeiro / BRCG), com base em material BRCG.</div>
+  </div>
+</section>
+
+<section class="section" id="indicadores">
+  <div class="eyebrow">Semana de 20 a 26 de julho de 2026</div>
+  <h2 class="sec-title">Indicadores</h2>
+  <p class="sec-desc">Fechamento de sexta 24/07. Comparações: semana contra 17/07, mês desde 30/06, ano desde 31/12/2025 e 12 meses desde 24/07/2025.</p>
+  <div class="divider"></div>
+
+  <div class="table-wrap">
+  <table class="asset-table">
+    <thead><tr><th>Indicador</th><th>Fechamento</th><th>Semana</th><th>Mês</th><th>Ano</th><th>12m</th><th class="sparkline-th">12 semanas</th></tr></thead>
+    <tbody>
+      <tr class="row-group"><td colspan="7">Brasil</td></tr>
+      <tr>
+        <td><span class="asset-name">Selic (nível)</span></td>
+        <td>14,25% a.a.</td>
+        <td><span class="pct flat">+0,00 pp</span></td>
+        <td><span class="pct flat">+0,00 pp</span></td>
+        <td><span class="pct flat">—</span></td>
+        <td><span class="pct flat">—</span></td>
+        <td class="sparkline-td"><span data-sparkline="[14.5,14.5,14.5,14.5,14.25,14.25,14.25,14.25,14.25,14.25,14.25,14.25]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">CDI (retorno acumulado)</span></td>
+        <td>taxa 14,15% a.a.</td>
+        <td><span class="pct up">+0,26%</span></td>
+        <td><span class="pct up">+0,95%</span></td>
+        <td><span class="pct up">+7,86%</span></td>
+        <td><span class="pct up">+14,73%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[14.4,14.4,14.4,14.4,14.4,14.4,14.15,14.15,14.15,14.15,14.15,14.15]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">IPCA</span></td>
+        <td>+4,64% (12m)</td>
+        <td><span class="pct flat">+0,16% *</span></td>
+        <td><span class="pct up">+0,16% * (jun/26)</span></td>
+        <td><span class="pct up">+3,36%</span></td>
+        <td><span class="pct up">+4,64%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[478.87,479.56,480.26,480.95,481.10,481.28,481.47,481.65,481.75,481.81,481.86,481.91]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">IRF-M</span></td>
+        <td>22.713,42</td>
+        <td><span class="pct up">+0,04%</span></td>
+        <td><span class="pct up">+0,06%</span></td>
+        <td><span class="pct up">+5,13%</span></td>
+        <td><span class="pct up">+12,10%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[22489,22275,22456,22542,22247,22440,22296,22599,22637,22800,22705,22713]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">IMA-B</span></td>
+        <td>11.471,98</td>
+        <td><span class="pct down">−0,28%</span></td>
+        <td><span class="pct up">+0,77%</span></td>
+        <td><span class="pct up">+4,88%</span></td>
+        <td><span class="pct up">+10,17%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[11522,11421,11451,11504,11277,11491,11326,11377,11398,11505,11504,11472]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">IHFA (multimercados)</span></td>
+        <td>6.289,61</td>
+        <td><span class="pct up">+0,05%</span></td>
+        <td><span class="pct down">−0,52%</span></td>
+        <td><span class="pct up">+2,73%</span></td>
+        <td><span class="pct up">+9,99%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[6297,6238,6247,6290,6222,6246,6270,6309,6323,6345,6286,6290]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">Ibovespa</span></td>
+        <td>174.042</td>
+        <td><span class="pct up">+0,19%</span></td>
+        <td><span class="pct up">+1,17%</span></td>
+        <td><span class="pct up">+8,02%</span></td>
+        <td><span class="pct up">+30,07%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[184108,177283,176209,173787,169019,171132,168333,173295,174070,177866,173714,174041]"></span></td>
+      </tr>
+      <tr class="row-group"><td colspan="7">Global</td></tr>
+      <tr>
+        <td><span class="asset-name">SOFR (Δ taxa)</span></td>
+        <td>3,64% a.a.</td>
+        <td><span class="pct up">+5 bps</span></td>
+        <td><span class="pct good-down">−4 bps</span></td>
+        <td><span class="pct good-down">−23 bps</span></td>
+        <td><span class="pct good-down">−66 bps</span></td>
+        <td class="sparkline-td"><span data-sparkline="[3.60,3.55,3.55,3.63,3.63,3.65,3.62,3.62,3.64,3.55,3.59,3.64]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">BBG Global Agg (proxy AGGG.L)</span></td>
+        <td>US$ 4,2700</td>
+        <td><span class="pct down">−0,59%</span></td>
+        <td><span class="pct down">−2,83%</span></td>
+        <td><span class="pct down">−4,70%</span></td>
+        <td><span class="pct down">−3,03%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[4.4285,4.355,4.375,4.42,4.371,4.402,4.3735,4.3895,4.377,4.373,4.2955,4.27]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">MSCI World</span></td>
+        <td>4.788,90</td>
+        <td><span class="pct down">−0,39%</span></td>
+        <td><span class="pct down">−0,76%</span></td>
+        <td><span class="pct up">+8,09%</span></td>
+        <td><span class="pct up">+16,12%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[4757.3,4741.6,4801.1,4864.6,4755.8,4788.2,4827.6,4744.3,4842.5,4867.8,4807.7,4788.9]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">S&amp;P 500</span></td>
+        <td>7.411,99</td>
+        <td><span class="pct down">−0,61%</span></td>
+        <td><span class="pct down">−1,17%</span></td>
+        <td><span class="pct up">+8,28%</span></td>
+        <td><span class="pct up">+16,48%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[7399,7409,7473,7580,7384,7431,7501,7354,7483,7575,7458,7412]"></span></td>
+      </tr>
+      <tr class="row-group"><td colspan="7">Commodities</td></tr>
+      <tr>
+        <td><span class="asset-name">Brent</span></td>
+        <td>US$ 96,78</td>
+        <td><span class="pct up">+9,85%</span></td>
+        <td><span class="pct up">+32,72%</span></td>
+        <td><span class="pct up">+59,05%</span></td>
+        <td><span class="pct up">+39,90%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[101.29,109.26,103.54,92.05,93.09,87.33,79.85,71.99,71.8,76.01,88.1,96.78]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">Ouro (USD/oz)</span></td>
+        <td>US$ 4.067,60</td>
+        <td><span class="pct up">+1,37%</span></td>
+        <td><span class="pct up">+1,11%</span></td>
+        <td><span class="pct down">−5,96%</span></td>
+        <td><span class="pct up">+20,66%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[4720,4556,4521,4561,4337,4215,4224,4079,4113,4104,4013,4068]"></span></td>
+      </tr>
+      <tr>
+        <td><span class="asset-name">Bitcoin (USD)</span></td>
+        <td>US$ 64.098</td>
+        <td><span class="pct up">+0,31%</span></td>
+        <td><span class="pct up">+9,46%</span></td>
+        <td><span class="pct down">−26,75%</span></td>
+        <td><span class="pct down">−45,85%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[80187,79066,75488,73373,60923,63543,63541,60016,62544,64127,63899,64098]"></span></td>
+      </tr>
+      <tr class="row-group"><td colspan="7">Moedas</td></tr>
+      <tr>
+        <td><span class="asset-name">USD/BRL (PTAX venda)</span></td>
+        <td>R$ 5,0666</td>
+        <td><span class="pct good-down">−1,00%</span></td>
+        <td><span class="pct good-down">−2,12%</span></td>
+        <td><span class="pct good-down">−7,92%</span></td>
+        <td><span class="pct good-down">−8,28%</span></td>
+        <td class="sparkline-td"><span data-sparkline="[4.8999,5.0654,5.014,5.0569,5.1244,5.0827,5.1442,5.1695,5.1717,5.1088,5.1176,5.0666]"></span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="reading-grid">
+    <div class="reading-card">
+      <div class="reading-title">Renda Fixa Brasil</div>
+      <div class="reading-body">Inversão em relação à semana anterior: o IRF-M ficou de lado (+0,04%) e o IMA-B caiu 0,28%. A explicação está no formato do movimento — a abertura se concentrou no longo, com o Jan/33 subindo 9,0 bps e as taxas reais da Anbima abrindo 10,6 bps na NTN-B 2050 e 10,7 bps na 2060. A média dos vértices de 2028 em diante foi de +7,3 bps, contra +3,9 bps na semana anterior. A NTN-B 2035 fechou a 8,17% e a 2045 a 7,68%. O CDI rendeu +0,26% na semana e acumula +7,86% no ano, acima do IRF-M (+5,13%) e do IMA-B (+4,88%).</div>
+    </div>
+    <div class="reading-card rv">
+      <div class="reading-title">Renda Variável</div>
+      <div class="reading-body">O Ibovespa subiu 0,19% enquanto o S&amp;P 500 caiu 0,61% e o MSCI World recuou 0,39%. No índice doméstico, Petrobras acumulou cinco pregões de ganhos, a Vale subiu com o relatório de produção e a WEG saltou 10,05% após o balanço; os bancos assumiram risk-off na quinta e na sexta. Lá fora, o vetor foi o capex de IA: Alphabet caiu 7,13% e Tesla 14,5% na quinta. No ano, o Ibovespa (+8,02%) mantém vantagem mínima sobre o CDI (+7,86%).</div>
+    </div>
+    <div class="reading-card cambio">
+      <div class="reading-title">Câmbio</div>
+      <div class="reading-body">O real valorizou 1,00% no PTAX de venda e o dólar chegou a R$ 5,0517 na quarta, menor nível em quase dois meses, com o petróleo caro melhorando os termos de troca. Na quinta, com o barril em US$ 100, o dólar retomou a função defensiva e subiu 0,64%. O DXY avançou 0,71% na semana, aos 101,476 pontos, e o iene tocou as mínimas em 40 anos, a 163,80.</div>
+    </div>
+    <div class="reading-card">
+      <div class="reading-title">Commodities &amp; Cripto</div>
+      <div class="reading-body">O Brent subiu 9,85% na semana, 32,72% no mês e 59,05% no ano, tendo tocado US$ 100 na quinta antes da realização de 3% na sexta. O ouro voltou a subir (+1,37%), diferente da semana anterior, quando caiu durante o choque. O bitcoin ficou estável (+0,31%), mantendo queda de 26,75% no ano.</div>
+    </div>
+  </div>
+
+  <p class="sec-desc" style="margin-top:24px">Fontes consultadas: BRCG, TAG Research, BDM, BCB Focus, Anbima, IBGE, Comdinheiro, Yahoo Finance, NY Fed, Investing.com, Datafolha, Indexa, Genial/Quaest, TSE, USTR, Broadcast.</p>
+</section>
+
+<section class="section" id="macro-brasil">
+  <div class="eyebrow">Semana de 20 a 26 de julho de 2026</div>
+  <h2 class="sec-title">Macro Brasil</h2>
+  <p class="sec-desc">O headline do Focus continua cedendo, mas a composição piora — e a curva tirou o corte de setembro do preço.</p>
+  <div class="divider"></div>
+
+  <div class="focus-grid">
+    <div class="focus-card">
+      <div class="focus-header">Focus 20/07 · coleta de 17/07</div>
+      <div class="focus-row"><span class="focus-year">IPCA 2026</span><span class="focus-val">5,15% <span class="focus-arrow down">▼</span></span></div>
+      <div class="focus-row"><span class="focus-year">IPCA 2027</span><span class="focus-val">4,20% <span class="focus-arrow flat">■</span></span></div>
+      <div class="focus-row"><span class="focus-year">IPCA 2028</span><span class="focus-val">3,78% <span class="focus-arrow up">▲</span></span></div>
+      <div class="focus-row"><span class="focus-year">IGP-M 2026</span><span class="focus-val">5,55% <span class="focus-arrow down">▼</span></span></div>
+      <div class="focus-row"><span class="focus-year">PIB 2027</span><span class="focus-val">1,65% <span class="focus-arrow flat">■</span></span></div>
+      <div class="focus-row"><span class="focus-year">Selic fim 2026</span><span class="focus-val">14,00% <span class="focus-arrow flat">■</span></span></div>
+    </div>
+    <div class="focus-card">
+      <div class="focus-header">Focus 27/07 · coleta de 24/07</div>
+      <div class="focus-row"><span class="focus-year">IPCA 2026</span><span class="focus-val">5,12% <span class="focus-arrow down">▼</span></span></div>
+      <div class="focus-row"><span class="focus-year">IPCA 2027</span><span class="focus-val">4,22% <span class="focus-arrow up">▲</span></span></div>
+      <div class="focus-row"><span class="focus-year">IPCA Serviços 2027</span><span class="focus-val">5,10% <span class="focus-arrow up">▲</span></span></div>
+      <div class="focus-row"><span class="focus-year">IGP-M 2026</span><span class="focus-val">5,42% <span class="focus-arrow down">▼</span></span></div>
+      <div class="focus-row"><span class="focus-year">PIB 2027</span><span class="focus-val">1,60% <span class="focus-arrow bad-down">▼</span></span></div>
+      <div class="focus-row"><span class="focus-year">Selic fim 2026</span><span class="focus-val">14,00% <span class="focus-arrow flat">■</span></span></div>
+    </div>
+  </div>
+
+  <div class="curve-grid">
+    <div class="curve-card">
+      <div class="curve-label">DI Jan/27</div>
+      <div class="curve-val">13,960%</div>
+      <div class="curve-prev">sem. anterior: 13,960% · 0,0 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">DI Jan/29</div>
+      <div class="curve-val">14,445%</div>
+      <div class="curve-prev">sem. anterior: 14,335% · +11,0 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">DI Jan/31</div>
+      <div class="curve-val">14,625%</div>
+      <div class="curve-prev">sem. anterior: 14,525% · +10,0 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">DI Jan/33</div>
+      <div class="curve-val">14,690%</div>
+      <div class="curve-prev">sem. anterior: 14,600% · +9,0 bps</div>
+    </div>
+  </div>
+
+  <p class="sec-desc" style="margin-top:18px">Curva de taxas reais — NTN-B (taxas indicativas Anbima), fechamento de 24/07 contra 17/07.</p>
+
+  <div class="curve-grid">
+    <div class="curve-card">
+      <div class="curve-label">NTN-B 2027</div>
+      <div class="curve-val">8,040%</div>
+      <div class="curve-prev">sem. anterior: 8,160% · −12,0 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">NTN-B 2029</div>
+      <div class="curve-val">8,320%</div>
+      <div class="curve-prev">sem. anterior: 8,310% · +1,0 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">NTN-B 2031</div>
+      <div class="curve-val">8,296%</div>
+      <div class="curve-prev">sem. anterior: 8,259% · +3,7 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">NTN-B 2035</div>
+      <div class="curve-val">8,170%</div>
+      <div class="curve-prev">sem. anterior: 8,070% · +10,0 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">NTN-B 2045</div>
+      <div class="curve-val">7,680%</div>
+      <div class="curve-prev">sem. anterior: 7,588% · +9,2 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">NTN-B 2060</div>
+      <div class="curve-val">7,543%</div>
+      <div class="curve-prev">sem. anterior: 7,436% · +10,7 bps</div>
+    </div>
+  </div>
+
+  <div class="news-grid">
+    <div class="news-card">
+      <div class="news-date">Qua · 22/07</div>
+      <div class="news-title">Governo lança Brasil Soberano 3 com R$ 18,5 bilhões em crédito</div>
+      <div class="news-body">No dia em que entrou em vigor a tarifa de 25%, o governo anunciou linhas de crédito para empresas afetadas, com R$ 5 bilhões do BNDES e R$ 13,5 bilhões do Tesouro provenientes de linhas anteriores não utilizadas. Por serem reembolsáveis, segundo o Ministério do Planejamento, não afetam o resultado primário. O programa atende empresas atingidas pelas Seções 232 e 301 e exportadores prejudicados pela guerra, beneficiando entre mil e 1,4 mil empresas.</div>
+      <div class="news-impact">O MDIC afirmou que o desenho já absorvia a tarifa adicional de 12,5% que veio no dia seguinte, e que neste caso a tendência era não haver exceções — o que se confirmou apenas parcialmente, com 471 produtos isentos.</div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">Qui · 23/07 (noite)</div>
+      <div class="news-title">Fazenda prorroga por 30 dias o subsídio de R$ 0,44 à gasolina</div>
+      <div class="news-body">A medida, vigente desde 25 de maio, expiraria no sábado 25/07 e foi estendida para evitar repasse imediato ao consumidor. Com o Brent perto de US$ 100 e os crack spreads em alta, a defasagem do diesel já superava R$ 2 por litro, e a subvenção em vigor para o combustível é de R$ 1,12 por litro.</div>
+      <div class="news-impact">É o segundo gatilho de política de combustíveis acionado no mês — na semana anterior, o governo havia fixado US$ 90 como nível de alerta e o barril já operava acima disso.</div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">Seg · 27/07</div>
+      <div class="news-title">Focus: quarta queda seguida no IPCA de 2026, com composição pior</div>
+      <div class="news-body">A mediana para 2026 recuou de 5,15% para 5,12%, quarta queda consecutiva, e o IGP-M caiu de 5,55% para 5,42%. Mas o IPCA de 2027 subiu de 4,20% para 4,22% e o de serviços de 2027 passou de 5,06% para 5,10%. O PIB de 2027 foi revisado de 1,65% para 1,60%, e a Selic terminal segue ancorada em 14,00% para 2026 e 12,00% para 2027.</div>
+      <div class="news-impact">O headline melhora enquanto o horizonte relevante piora: é a mesma combinação que sustentou a abertura dos vértices longos da curva de DI e das taxas reais na semana.</div>
+    </div>
+    <div class="news-card alert">
+      <div class="news-date">Qui · 23/07 e sex · 24/07</div>
+      <div class="news-title">Curva elimina o corte de setembro e passa a precificar Selic de volta a 15%</div>
+      <div class="news-body">Com o Brent rompendo US$ 100, os juros futuros abriram forte na quinta, para as máximas em um mês: o Jan/29 saltou para 14,675%, o Jan/31 para 14,850% e o Jan/33 para 14,880%. A curva ainda aponta cerca de 68% de probabilidade de corte de 0,25 ponto no Copom de agosto, contra 32% de manutenção, mas a expectativa de novos cortes em setembro foi praticamente eliminada. A taxa implícita para o segundo semestre de 2028 passou a precificar a Selic de volta ao nível de 15%.</div>
+      <div class="news-impact">Na sexta, com a acomodação do petróleo, a curva devolveu parte do prêmio — Jan/33 a 14,690% e Jan/31 a 14,625% — mas fechou a semana acima da anterior em todos os vértices de 2029 em diante.</div>
+    </div>
+    </div>
+</section>
+
+<section class="section" id="macro-global">
+  <div class="eyebrow">Semana de 20 a 26 de julho de 2026</div>
+  <h2 class="sec-title">Macro Global</h2>
+  <p class="sec-desc">Duas semanas depois de comemorar a desinflação, o mercado voltou a precificar aperto nos dois lados do Atlântico.</p>
+  <div class="divider"></div>
+
+  <div class="curve-grid">
+    <div class="curve-card">
+      <div class="curve-label">Treasury 2 anos</div>
+      <div class="curve-val">4,330%</div>
+      <div class="curve-prev">sem. anterior: 4,176% · +15,4 bps</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">Treasury 10 anos</div>
+      <div class="curve-val">4,678%</div>
+      <div class="curve-prev">operou acima de 4,7% na quinta, 1ª vez em 1 ano e meio</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">Treasury 30 anos</div>
+      <div class="curve-val">5,161%</div>
+      <div class="curve-prev">perto do pico de maio, próximo de 5,20%</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">Índice DXY</div>
+      <div class="curve-val">101,476</div>
+      <div class="curve-prev">sem. anterior: 100,763 · +0,71%</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">Prob. alta do Fed em set</div>
+      <div class="curve-val">&gt; 80%</div>
+      <div class="curve-prev">de 46,9% na semana anterior · 55% em 22/07</div>
+    </div>
+    <div class="curve-card">
+      <div class="curve-label">Taxa de depósito do BCE</div>
+      <div class="curve-val">2,25%</div>
+      <div class="curve-prev">mantida por unanimidade em 23/07</div>
+    </div>
+  </div>
+
+  <div class="news-grid">
+    <div class="news-card">
+      <div class="news-date">Qui · 23/07</div>
+      <div class="news-title">Treasury de 30 anos volta a rondar 5,20% e o trecho longo reflete o gasto com IA</div>
+      <div class="news-body">O rendimento de 30 anos fechou a semana a 5,161%, próximo do pico atingido em maio. Analistas apontam que a ponta longa é o trecho que mais tem refletido a perspectiva de gastos com inteligência artificial, num momento em que as maiores empresas do setor ampliam capex e consomem caixa.</div>
+      <div class="news-impact">A combinação de choque de energia na ponta curta e financiamento de capex na ponta longa manteve toda a curva americana pressionada, mesmo com a acomodação do petróleo na sexta.</div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">Qui · 23/07</div>
+      <div class="news-title">Iene toca as mínimas em 40 anos e o BoJ mantém apenas advertências verbais</div>
+      <div class="news-body">A moeda japonesa perdeu 0,43% e chegou a 163,80 por dólar, nível mais baixo em quatro décadas. O banco central japonês manteve o discurso habitual de adotar "medidas decisivas" se necessário. Reportagem citada no mercado indicou que o BoJ deve manter a taxa na reunião de 31/07, mas pode apertar a política antes do prazo usual de seis meses de transição de postura.</div>
+      <div class="news-impact">A fraqueza do iene se soma ao choque de energia como fator inflacionário para o Japão, e reforça a leitura de que o diferencial de juros contra o dólar seguirá pressionando a moeda enquanto o Fed mantiver viés de alta.</div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">Sex · 24/07</div>
+      <div class="news-title">PMIs preliminares do Japão mostram desaceleração modesta em julho</div>
+      <div class="news-body">O PMI de serviços caiu de 52,2 para 51,9 pontos e o industrial recuou de 54,8 para 54,7, ambos ainda em território de expansão. O PMI composto subiu de 52,8 para 53,1 pontos. Na mesma sexta saíram os PMIs preliminares dos Estados Unidos, da Europa e do Reino Unido.</div>
+      <div class="news-impact">A atividade global resiliente reduz o espaço para leitura de desaceleração compensatória ao choque de energia, cenário que reforça o viés de aperto nos bancos centrais desenvolvidos.</div>
+    </div>
+    <div class="news-card alert">
+      <div class="news-date">Qua · 22/07 a qui · 23/07</div>
+      <div class="news-title">Aposta de alta do Fed em setembro salta de 55% para mais de 80% em dois dias</div>
+      <div class="news-body">Na quarta, a ferramenta do CME já mostrava 55% de chance de aperto de 25 pontos-base em setembro, mais que o dobro da aposta em manutenção (22%). Na quinta, com o Brent em US$ 100, a probabilidade superou 80%. Duas semanas antes, após o PPI, a mesma aposta estava em 46,9%.</div>
+      <div class="news-impact">A Treasury de 2 anos subiu de 4,207% na segunda para 4,349% na quinta, e a de 10 anos se aproximou do pico do ano. O dólar retomou a função de ativo defensivo, com o DXY fechando a semana a 101,476 pontos.</div>
+    </div>
+    </div>
+</section>
+
+<section class="section" id="geopolitica">
+  <div class="eyebrow">Semana de 20 a 26 de julho de 2026</div>
+  <h2 class="sec-title">Geopolítica &amp; Petróleo</h2>
+  <p class="sec-desc">De US$ 89 a US$ 100 e de volta a US$ 96,78 — a semana em que o risco deixou de ser só Ormuz.</p>
+  <div class="divider"></div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">Segunda · 20/07</div>
+      <div class="tl-title">Nona noite de ataques e Brent acima de US$ 90</div>
+      <div class="tl-body">O Comando Central americano anuncia nova onda de ataques, já atingindo infraestrutura crítica, e o número de militares americanos mortos chega a 17. O Brent supera US$ 91 durante o dia e fecha em alta de 1,27%, a US$ 89,22, acumulando mais de 20% de valorização em julho.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Terça · 21/07</div>
+      <div class="tl-title">Houthis ampliam a ameaça para o Mar Vermelho</div>
+      <div class="tl-body">O bloqueio anunciado pelos houthis à Arábia Saudita amplia o risco para o Mar Vermelho e Bab-el-Mandeb. Dois petroleiros carregados com petróleo saudita mudam de rota após alertas, e empresas de navegação reavaliam operações. O Brent fecha acima de US$ 91, em alta de 2,01%.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Quarta · 22/07</div>
+      <div class="tl-title">Navio atingido na costa saudita e Brent supera US$ 95</div>
+      <div class="tl-body">A UK Maritime Trade Operations informa que uma embarcação foi atingida por um projétil na costa saudita do Mar Vermelho, com incêndio a bordo. O Brent encerra a quarta sessão consecutiva de alta acima de US$ 94 e supera US$ 95 no eletrônico. É o 12º dia consecutivo de ataques.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Quinta · 23/07</div>
+      <div class="tl-title">Os três dígitos</div>
+      <div class="tl-body">O Brent salta mais de 6% e chega a US$ 100, na 13ª noite consecutiva de ataques, depois de Trump afirmar que avaliava ofensiva superior à operação "Epic Fury" caso os houthis continuassem atacando embarcações. Três semanas antes, o barril estava abaixo de US$ 70.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Sexta · 24/07</div>
+      <div class="tl-title">Realização técnica devolve os US$ 100</div>
+      <div class="tl-body">Com os esforços de diplomacia de volta às manchetes, o barril recua 3% e fecha a US$ 96,78, ainda acumulando 9,85% na semana. As ações da Petrobras emplacam o quinto pregão consecutivo de ganhos (ON +1,32%, a R$ 48,53).</div>
+    </div>
+  </div>
+
+  <div class="news-grid">
+    <div class="news-card geo">
+      <div class="news-date">Qui · 23/07</div>
+      <div class="news-title">O que explica o prêmio: 30% do petróleo marítimo depende das duas rotas ameaçadas</div>
+      <div class="news-body">Antes da guerra, cerca de 25% de todo o petróleo transportado por via marítima passava pelo Estreito de Ormuz, e Bab el-Mandeb respondia por outros 5%. Até então o mercado precificava risco em uma rota; a ameaça simultânea às duas mudou a escala do prêmio incorporado aos preços.</div>
+      <div class="news-impact">Foi essa mudança de escopo — e não um corte efetivo de oferta — que levou o barril de US$ 89 na segunda a US$ 100 na quinta, e que sustentou a reprecificação de juros nos Estados Unidos e na zona do euro.</div>
+    </div>
+    <div class="news-card geo">
+      <div class="news-date">Sáb · 25/07 e dom · 26/07</div>
+      <div class="news-title">Washington suspende as ofensivas e o prêmio começa a se desfazer</div>
+      <div class="news-body">Depois de 13 dias consecutivos de bombardeios, os Estados Unidos pausaram as ofensivas para abrir espaço às negociações, em decisão atribuída ao comandante das forças americanas na região, para quem a campanha havia atingido o limite de sua eficácia.</div>
+      <div class="news-impact">Na abertura do pregão eletrônico da segunda 27/07, o Brent ampliava a queda e era negociado a US$ 93,04, recuo de 3,86% — devolvendo parte do prêmio que havia reprecificado a curva de juros na semana.</div>
+    </div>
+    </div>
+</section>
+
+<section class="section" id="politica-brasil">
+  <div class="eyebrow">Semana de 20 a 26 de julho de 2026</div>
+  <h2 class="sec-title">Política Brasil</h2>
+  <p class="sec-desc">Semana de convenções e de quatro pesquisas, com o tarifaço já aparecendo nos números.</p>
+  <div class="divider"></div>
+
+  <div class="poll-wrap">
+    <div class="poll-title">Indexa · 21/07 · Estimulada 1º turno</div>
+    <div class="poll-row">
+      <div class="poll-name"><span>Lula</span><span>41%</span></div>
+      <div class="poll-bar-bg"><div class="poll-bar-fill c1" style="width:41%"></div></div>
+    </div>
+    <div class="poll-row">
+      <div class="poll-name"><span>Flávio Bolsonaro</span><span>30%</span></div>
+      <div class="poll-bar-bg"><div class="poll-bar-fill c2" style="width:30%"></div></div>
+    </div>
+  </div>
+
+  <div class="poll-wrap">
+    <div class="poll-title">Indexa · 21/07 · 2º turno</div>
+    <div class="poll-row">
+      <div class="poll-name"><span>Lula</span><span>46%</span></div>
+      <div class="poll-bar-bg"><div class="poll-bar-fill c1" style="width:46%"></div></div>
+    </div>
+    <div class="poll-row">
+      <div class="poll-name"><span>Flávio Bolsonaro</span><span>39%</span></div>
+      <div class="poll-bar-bg"><div class="poll-bar-fill c2" style="width:39%"></div></div>
+    </div>
+  </div>
+
+  <div class="poll-wrap">
+    <div class="poll-title">Datafolha · 24/07 (noite) · 2º turno</div>
+    <div class="poll-row">
+      <div class="poll-name"><span>Lula</span><span>48%</span></div>
+      <div class="poll-bar-bg"><div class="poll-bar-fill c1" style="width:48%"></div></div>
+    </div>
+    <div class="poll-row">
+      <div class="poll-name"><span>Flávio Bolsonaro</span><span>43%</span></div>
+      <div class="poll-bar-bg"><div class="poll-bar-fill c2" style="width:43%"></div></div>
+    </div>
+  </div>
+
+  <div class="political-grid">
+    <div class="political-card">
+      <span class="tag rust">Eleições</span><span class="tag teal">Prêmio BR</span>
+      <div class="political-title">Quatro pesquisas na semana e uma vantagem que oscila conforme o instituto</div>
+      <ul class="bullet-list">
+        <li>A Indexa, divulgada em 21/07, mostrou Lula com 41% contra 30% de Flávio Bolsonaro no primeiro turno e 46% contra 39% no segundo.</li>
+        <li>Na mesma pesquisa, 30% apontaram Flávio como principal responsável pela crise comercial com os Estados Unidos, contra 28% que responsabilizaram Lula.</li>
+        <li>Segundo a Genial/Quaest, 55% dos eleitores acreditam que Lula será o vencedor, contra 25% que apostam em Flávio.</li>
+        <li>O Datafolha divulgado na noite de sexta 24/07 apontou 48% contra 43% em eventual segundo turno — a margem mais estreita entre os levantamentos da semana.</li>
+        <li>A semana teve ainda divulgações de Real Time Big Data (21/07) e Gerp (22/07), e a AtlasIntel ficou marcada para 28/07, já fora da janela, como o primeiro levantamento desenhado para medir efeitos eleitorais do tarifaço.</li>
+        <li>O TSE fixou o limite de gastos de campanha presidencial em R$ 88,9 milhões no primeiro turno e R$ 44,5 milhões no segundo, total de R$ 133,4 milhões.</li>
+      </ul>
+    </div>
+    <div class="political-card">
+      <span class="tag rust">Convenções</span><span class="tag copper">Fiscal</span>
+      <div class="political-title">Convenções abrem com crise na direita e uma conta nova do TCU</div>
+      <ul class="bullet-list">
+        <li>O PL oficializou a candidatura de Flávio Bolsonaro no sábado 25/07, em São Paulo, encerrando o período de definição da chapa.</li>
+        <li>A dois dias da convenção, Flávio renovou o pedido de desculpas a Michelle Bolsonaro em apelo pela união da direita.</li>
+        <li>Ciro Nogueira indicou que o PP deve permanecer neutro na disputa presidencial, sem integrar a chapa, liberando os diretórios estaduais.</li>
+        <li>O dirigente também afirmou a aliados que não pretende ser oposição a partir de 2027 e que Lula parece hoje mais perto da vitória.</li>
+        <li>O TCU enviou ao Congresso, em 15/07, projeto que prevê aumento de até 40% em gratificações a servidores do órgão, com impacto de R$ 27,7 bilhões a partir de 2027.</li>
+        <li>No mesmo dia, a Corte aprovou pagamento de vencimentos acima do teto de R$ 46,3 mil para funções de confiança e cargos em comissão.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="news-grid">
+    <div class="news-card political">
+      <div class="news-date">Ter · 21/07</div>
+      <div class="news-title">Empresariado pressiona por retaliação e Trump amplia a frente comercial</div>
+      <div class="news-body">O governo começou a ouvir os setores afetados pela tarifa de 25%, com o empresariado defendendo a aplicação da Lei de Reciprocidade. Alckmin destacou crescimento de R$ 10 bilhões nas exportações à Europa em dois meses. No mesmo dia, Trump anunciou tarifas de 50% ao Canadá e, na terça seguinte, tarifa de 100% sobre genéricos importados a partir de agosto de 2028, subindo a 200% em 2029.</div>
+      <div class="news-impact">A escalada em múltiplas frentes reforçou a leitura de que a tarifa brasileira é parte de um movimento mais amplo, e não um evento bilateral isolado — o que reduz o espaço de negociação específica e sustenta o prêmio de risco no ativo doméstico.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="resultados">
+  <div class="eyebrow">Semana de 20 a 26 de julho de 2026</div>
+  <h2 class="sec-title">Resultados</h2>
+  <p class="sec-desc">A temporada do segundo trimestre trouxe a conta do capex de inteligência artificial — e, na B3, um trimestre operacional forte da Vale.</p>
+  <div class="divider"></div>
+
+  <div class="news-grid">
+    <div class="news-card highlight">
+      <div class="news-date">Ter · 21/07 (noite)</div>
+      <div class="news-title">Vale entrega o melhor segundo trimestre de minério desde 2018</div>
+      <div class="news-body">A produção de minério de ferro somou 84,255 milhões de toneladas, alta de 0,8% na comparação anual, e as vendas cresceram 3,1%, para 79,747 milhões de toneladas. O destaque foi o cobre, com produção 6,3% maior, vendas 9,7% acima e preço realizado 56,5% superior ao segundo trimestre de 2025. Na quarta, Manuel de Sousa Oliveira foi eleito presidente do conselho de administração.</div>
+      <div class="news-impact">As ações saltaram 3,96%, a R$ 75,10, na quarta 22/07, ajudando o Ibovespa a subir 2,44% e retomar os 177 mil pontos. Na B3, a WEG também surpreendeu e disparou 10,05%, a R$ 46,74, liderando os ganhos do índice.</div>
+    </div>
+    <div class="news-card alert">
+      <div class="news-date">Qua · 22/07 (after)</div>
+      <div class="news-title">Alphabet bate estimativas, mas reporta fluxo de caixa livre negativo</div>
+      <div class="news-body">Lucro e receita vieram acima das projeções, com o Google Cloud crescendo 82% e expansão dos negócios de inteligência artificial. Ainda assim, a companhia revelou fluxo de caixa livre negativo, reflexo do aumento dos investimentos em infraestrutura de IA — o capex do trimestre foi de US$ 44,9 bilhões, o dobro do mesmo período do ano anterior.</div>
+      <div class="news-impact">A ação caiu 3,31% no after hours e afundou 7,13% no pregão seguinte, na quinta 23/07, arrastando o Nasdaq para queda de 2,15%.</div>
+    </div>
+    <div class="news-card alert">
+      <div class="news-date">Qua · 22/07 (after)</div>
+      <div class="news-title">Tesla erra o lucro por ação e registra o primeiro FCL negativo em dois anos</div>
+      <div class="news-body">Receita e vendas de veículos superaram as expectativas, mas o lucro por ação ficou em US$ 0,33 contra US$ 0,49 esperados. O capex saltou 142% para sustentar os projetos de Dojo e direção autônoma, resultando em fluxo de caixa livre negativo de US$ 1,1 bilhão, o primeiro em dois anos.</div>
+      <div class="news-impact">A ação recuou 4,08% no after hours e teve queda livre de 14,5% na quinta, sinalizando dúvida do mercado sobre a classificação setorial da companhia — montadora ou empresa de IA.</div>
+    </div>
+    <div class="news-card">
+      <div class="news-date">Qua · 22/07 a qui · 23/07</div>
+      <div class="news-title">O denominador comum: US$ 725 bilhões de capex de IA em 2026</div>
+      <div class="news-body">O investimento combinado de Amazon, Google, Meta e Microsoft em infraestrutura de inteligência artificial deve somar US$ 725 bilhões em 2026, alta de 77% sobre os US$ 410 bilhões de 2025. A Microsoft sinalizou capex anual de US$ 190 bilhões, com fluxo de caixa operacional de US$ 35,8 bilhões por trimestre contra capex trimestral projetado de US$ 31 bilhões. A Meta revisou seu guidance para cima três vezes, chegando a US$ 145 bilhões. A IBM reportou lucro abaixo do esperado e reduziu a projeção de receita do ano.</div>
+      <div class="news-impact">O tema deslocou o eixo de discussão do crescimento para a geração de caixa: o Nasdaq caiu 2,15% na quinta e 0,64% na sexta, e o S&amp;P 500 recuou 1,21% na quinta, fechando a semana a 7.411,99 pontos.</div>
+    </div>
+    </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Raya Advisory · Painel Semanal · 20/07 a 26/07/2026</div>
+    <div class="footer-disc">
+      As informações deste painel são de caráter informativo e foram elaboradas com base em fontes públicas e privadas consideradas confiáveis. Não constituem recomendação de investimento. A Raya Advisory não se responsabiliza por decisões tomadas com base neste material.
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ────── ABAS ────── */
+function showTab(id, btn){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+/* ────── TEMA CLARO/ESCURO ────── */
+const root = document.documentElement;
+const themeBtn = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+const themeLabel = document.getElementById('theme-label');
+function applyTheme(theme){
+  root.setAttribute('data-theme', theme);
+  if(theme === 'dark'){
+    themeIcon.textContent = '☀';
+    themeLabel.textContent = 'Claro';
+  } else {
+    themeIcon.textContent = '☾';
+    themeLabel.textContent = 'Escuro';
+  }
+  try { localStorage.setItem('raya-theme', theme); } catch(e) {}
+}
+themeBtn.addEventListener('click', () => {
+  const cur = root.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+});
+try {
+  const saved = localStorage.getItem('raya-theme');
+  if(saved) applyTheme(saved);
+} catch(e) {}
+
+/* ────── ZOOM DINÂMICO (para apresentação ao vivo) ────── */
+const ZOOM_MIN = 0.8;
+const ZOOM_MAX = 2.0;
+const ZOOM_STEP = 0.1;
+const ZOOM_DEFAULT = 1.0;
+let zoomBeforePresent = ZOOM_DEFAULT;
+const zoomVal = document.getElementById('zoom-val');
+const zoomIn  = document.getElementById('zoom-in');
+const zoomOut = document.getElementById('zoom-out');
+
+function applyZoom(z, save = true){
+  z = Math.round(z * 10) / 10;
+  z = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, z));
+  document.body.style.zoom = z;                      // Chromium / Safari
+  document.body.style.MozTransform = `scale(${z})`;  // Firefox legacy fallback
+  document.body.style.MozTransformOrigin = '0 0';
+  zoomVal.textContent = Math.round(z * 100) + '%';
+  // Visual hint quando o zoom está alto/baixo
+  zoomVal.style.color = z >= 1.4 ? 'var(--raya-teal-light)' : (z <= 0.9 ? 'var(--raya-copper-mid)' : '');
+  if(save){
+    try { localStorage.setItem('raya-zoom', z); } catch(e) {}
+  }
+  return z;
+}
+function getZoom(){
+  const v = parseFloat(document.body.style.zoom || ZOOM_DEFAULT);
+  return isNaN(v) ? ZOOM_DEFAULT : v;
+}
+zoomIn.addEventListener('click', () => applyZoom(getZoom() + ZOOM_STEP));
+zoomOut.addEventListener('click', () => applyZoom(getZoom() - ZOOM_STEP));
+zoomVal.addEventListener('click', () => applyZoom(ZOOM_DEFAULT));   // clicar no % reseta para 100
+
+// Atalhos de teclado: +/=  aumenta, -/_  diminui, 0 reseta
+document.addEventListener('keydown', (e) => {
+  if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if(e.ctrlKey || e.metaKey || e.altKey) return; // não interferir com zoom do browser
+  if(e.key === '+' || e.key === '=') { applyZoom(getZoom() + ZOOM_STEP); e.preventDefault(); }
+  else if(e.key === '-' || e.key === '_') { applyZoom(getZoom() - ZOOM_STEP); e.preventDefault(); }
+  else if(e.key === '0') { applyZoom(ZOOM_DEFAULT); e.preventDefault(); }
+});
+
+// Carregar zoom salvo do localStorage
+try {
+  const savedZ = parseFloat(localStorage.getItem('raya-zoom'));
+  if(!isNaN(savedZ)) applyZoom(savedZ, false);
+  else applyZoom(ZOOM_DEFAULT, false);
+} catch(e) { applyZoom(ZOOM_DEFAULT, false); }
+
+/* ────── MODO APRESENTAÇÃO (zoom 140% + fullscreen) ────── */
+const PRESENTATION_ZOOM = 1.4;
+const presentBtn = document.getElementById('present-toggle');
+presentBtn.addEventListener('click', () => {
+  const cur = root.getAttribute('data-presentation');
+  if(cur === 'on'){
+    root.removeAttribute('data-presentation');
+    presentBtn.classList.remove('active');
+    presentBtn.textContent = '▣ Apresentação';
+    applyZoom(zoomBeforePresent || ZOOM_DEFAULT);
+    if(document.fullscreenElement) document.exitFullscreen();
+  } else {
+    zoomBeforePresent = getZoom();
+    root.setAttribute('data-presentation', 'on');
+    presentBtn.classList.add('active');
+    presentBtn.textContent = '▣ Sair Apres.';
+    applyZoom(PRESENTATION_ZOOM, false);
+    if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  if(!document.fullscreenElement && root.getAttribute('data-presentation') === 'on'){
+    root.removeAttribute('data-presentation');
+    presentBtn.classList.remove('active');
+    presentBtn.textContent = '▣ Apresentação';
+    applyZoom(zoomBeforePresent || ZOOM_DEFAULT);
+  }
+});
+
+/* ────── ANIMAÇÃO BARRAS DE PESQUISA ────── */
+setTimeout(() => {
+  document.querySelectorAll('.poll-bar-fill').forEach(bar => {
+    const w = bar.style.width;
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = w; }, 100);
+  });
+}, 300);
+
+/* ────── SPARKLINES (mini-gráficos na tabela final) ────── */
+function renderSparkline(canvas, series){
+  if(!series || series.length < 2) return;
+  const W = 100, H = 28, pad = 2;
+  const min = Math.min(...series), max = Math.max(...series);
+  const range = max - min || 1;
+  const xStep = (W - pad*2) / (series.length - 1);
+  const points = series.map((v, i) => {
+    const x = pad + i * xStep;
+    const y = pad + (H - pad*2) * (1 - (v - min) / range);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const last = series[series.length - 1];
+  const first = series[0];
+  const color = last >= first ? '#07C0BD' : '#E05555';
+  const lastX = pad + (series.length - 1) * xStep;
+  const lastY = pad + (H - pad*2) * (1 - (last - min) / range);
+  canvas.outerHTML = `
+    <svg class="sparkline-svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+      <polyline fill="none" stroke="${color}" stroke-width="1.6" points="${points}" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="2" fill="${color}"/>
+    </svg>`;
+}
+document.querySelectorAll('[data-sparkline]').forEach(el => {
+  try {
+    const series = JSON.parse(el.getAttribute('data-sparkline'));
+    renderSparkline(el, series);
+  } catch(e){ console.warn('sparkline error', e); }
+});
+</script>
+</body>
+</html>
