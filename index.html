@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatórios — RAYA Advisory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+/* ── TOKENS ─────────────────────────────────────────── */
+:root {
+  --dark:       #122028;
+  --dark-mid:   #20353A;
+  --dark-alt:   #364F53;
+  --teal:       #1D9492;
+  --teal-light: #07C0BD;
+  --copper:     #BE620F;
+  --copper-mid: #B0742A;
+  --text:       #E6E4DB;
+  --text-dim:   rgba(230,228,219,.5);
+  --text-faint: rgba(230,228,219,.25);
+  --border:     rgba(230,228,219,.08);
+  --border-teal:rgba(29,148,146,.3);
+  --font:       'Syne', 'Inter', system-ui, sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--dark);
+  color:var(--text);
+  font-family:var(--font);
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+}
+
+/* ── LOGIN ───────────────────────────────────────────── */
+#login-screen{
+  display:none !important;
+}
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;
+  position:relative;overflow:hidden;
+}
+#login-screen::before{
+  content:'';position:absolute;
+  top:-150px;right:-150px;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(29,148,146,.08) 0%,transparent 65%);
+  pointer-events:none;
+}
+#login-screen::after{
+  content:'';position:absolute;
+  bottom:-100px;left:-100px;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(190,98,15,.05) 0%,transparent 65%);
+  pointer-events:none;
+}
+.login-card{
+  position:relative;z-index:1;
+  width:100%;max-width:400px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:2.8rem 2.4rem;
+  display:flex;flex-direction:column;gap:1.3rem;
+}
+.login-logo{text-align:center;margin-bottom:.4rem}
+.login-logo img{
+  width:72px;height:72px;
+  border-radius:50%;
+  display:block;margin:0 auto .8rem;
+  object-fit:contain;
+}
+.login-logo .brand{
+  font-size:20px;font-weight:700;
+  color:var(--copper);letter-spacing:.14em;
+  text-transform:uppercase;display:block;
+}
+.login-logo .brand-sub{
+  font-size:11px;font-weight:400;
+  color:var(--teal-light);letter-spacing:.2em;
+  text-transform:uppercase;display:block;margin-top:.2rem;
+}
+.login-title{
+  font-size:22px;font-weight:600;
+  color:var(--text);text-align:center;
+}
+.login-sub{
+  font-size:13px;color:var(--text-dim);
+  text-align:center;margin-top:-.6rem;
+}
+.field{display:flex;flex-direction:column;gap:.4rem}
+.field label{
+  font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-dim);
+}
+.field input{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;
+  padding:.75rem 1rem;
+  color:var(--text);font-size:15px;font-family:var(--font);
+  outline:none;transition:border-color .15s;
+}
+.field input::placeholder{color:var(--text-faint)}
+.field input:focus{border-color:var(--teal)}
+.btn-primary{
+  padding:.85rem;
+  background:var(--teal);color:#fff;
+  border:none;border-radius:8px;
+  font-size:15px;font-weight:600;font-family:var(--font);
+  letter-spacing:.04em;cursor:pointer;
+  transition:background .15s;
+  margin-top:.2rem;
+}
+.btn-primary:hover{background:var(--teal-light)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.login-error{
+  font-size:12px;color:#e05c5c;
+  text-align:center;display:none;
+}
+
+/* ── APP (após login) ────────────────────────────────── */
+#app{display:block}
+
+/* ── HEADER ──────────────────────────────────────────── */
+header{
+  background:var(--dark-mid);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;position:sticky;top:0;z-index:100;
+}
+.header-brand{display:flex;align-items:center;gap:.75rem}
+.header-brand img{width:36px;height:36px;border-radius:50%;object-fit:contain}
+.header-brand .name{font-size:15px;font-weight:700;color:var(--copper);letter-spacing:.1em}
+.header-brand .sub{font-size:10px;color:var(--teal-light);letter-spacing:.15em;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:1rem}
+.user-badge{
+  font-size:12px;color:var(--text-dim);
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--border);
+  border-radius:20px;padding:.3rem .9rem;
+}
+.btn-logout{
+  font-size:12px;font-weight:600;font-family:var(--font);
+  color:var(--text-dim);background:none;border:none;
+  cursor:pointer;letter-spacing:.05em;
+  transition:color .15s;padding:.3rem .5rem;
+}
+.btn-logout:hover{color:var(--text)}
+
+/* ── MAIN ────────────────────────────────────────────── */
+main{max-width:900px;margin:0 auto;padding:2.5rem 2rem}
+
+.page-title{
+  font-size:28px;font-weight:700;color:var(--copper);
+  letter-spacing:.04em;margin-bottom:.4rem;
+}
+.page-sub{font-size:14px;color:var(--text-dim);margin-bottom:2rem}
+
+/* ── ADMIN PANEL ─────────────────────────────────────── */
+#admin-panel{
+  background:rgba(29,148,146,.06);
+  border:1px solid var(--border-teal);
+  border-radius:12px;padding:1.5rem;
+  margin-bottom:2rem;display:none;
+}
+.admin-title{
+  font-size:12px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--teal-light);margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.admin-title::before{
+  content:'';width:6px;height:6px;
+  background:var(--teal-light);border-radius:50%;
+  display:inline-block;
+}
+.admin-form{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.admin-form .field-full{grid-column:1/-1}
+.admin-form input{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:.6rem .9rem;
+  color:var(--text);font-size:14px;font-family:var(--font);
+  outline:none;transition:border-color .15s;width:100%;
+}
+.admin-form input:focus{border-color:var(--teal)}
+.admin-form input::placeholder{color:var(--text-faint)}
+.btn-add{
+  padding:.65rem 1.2rem;
+  background:var(--teal);color:#fff;
+  border:none;border-radius:8px;
+  font-size:13px;font-weight:600;font-family:var(--font);
+  cursor:pointer;transition:background .15s;
+  white-space:nowrap;
+}
+.btn-add:hover{background:var(--teal-light)}
+.admin-success{
+  font-size:12px;color:#5ecb8a;
+  display:none;margin-top:.5rem;
+}
+
+/* ── FILTROS ─────────────────────────────────────────── */
+.filters{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter-btn{
+  font-size:12px;font-weight:500;font-family:var(--font);
+  padding:.35rem .9rem;border-radius:20px;
+  border:1px solid var(--border);
+  background:transparent;color:var(--text-dim);
+  cursor:pointer;transition:all .15s;letter-spacing:.04em;
+}
+.filter-btn:hover{border-color:var(--teal);color:var(--text)}
+.filter-btn.active{
+  background:var(--teal);border-color:var(--teal);
+  color:#fff;
+}
+
+/* ── LISTA DE RELATÓRIOS ─────────────────────────────── */
+#reports-list{display:flex;flex-direction:column;gap:.75rem}
+
+.report-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1.1rem 1.4rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;transition:border-color .15s,background .15s;
+  text-decoration:none;cursor:pointer;
+}
+.report-card:hover{
+  border-color:var(--border-teal);
+  background:rgba(29,148,146,.04);
+}
+.report-info{flex:1;min-width:0}
+.report-tag{
+  font-size:10px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--teal-light);margin-bottom:.3rem;
+  display:block;
+}
+.report-title{
+  font-size:16px;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.report-date{font-size:12px;color:var(--text-dim);margin-top:.15rem}
+.report-arrow{
+  color:var(--teal);font-size:18px;flex-shrink:0;
+  transition:transform .15s;
+}
+.report-card:hover .report-arrow{transform:translateX(3px)}
+.report-delete{
+  background:none;border:none;cursor:pointer;
+  color:rgba(224,92,92,.4);font-size:16px;
+  padding:.25rem;transition:color .15s;flex-shrink:0;
+  display:none;
+}
+.report-delete:hover{color:#e05c5c}
+
+.empty-state{
+  text-align:center;padding:3rem 1rem;
+  color:var(--text-dim);
+}
+.empty-state .icon{font-size:36px;margin-bottom:1rem;opacity:.4}
+.empty-state p{font-size:14px}
+
+/* ── LOADING ─────────────────────────────────────────── */
+.loading{
+  text-align:center;padding:3rem;
+  color:var(--text-dim);font-size:14px;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(max-width:600px){
+  header{padding:0 1rem}
+  main{padding:1.5rem 1rem}
+  .admin-form{grid-template-columns:1fr}
+  .admin-form .field-full{grid-column:1}
+  .page-title{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="mono_umaCORescuro.png" alt="Raya Advisory" />
+      <span class="brand">RAYA</span>
+      <span class="brand-sub">Advisory</span>
+    </div>
+    <p class="login-title">Relatórios Semanais</p>
+    <p class="login-sub">Área exclusiva para clientes</p>
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" />
+    </div>
+    <div class="field">
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <p class="login-error" id="login-error"></p>
+    <button class="btn-primary" id="login-btn" onclick="fazerLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ══ APP ════════════════════════════════════════════ -->
+<div id="app">
+
+  <header>
+    <div class="header-brand">
+      <img src="mono_umaCORescuro.png" alt="Raya" />
+      <div>
+        <div class="name">RAYA</div>
+        <div class="sub">Advisory</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="user-badge" id="user-email-badge"></span>
+      <button class="btn-logout" onclick="sair()">Sair →</button>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Relatórios Semanais</h1>
+    <p class="page-sub" id="page-sub">Acompanhe as análises e atualizações de mercado.</p>
+
+    <!-- PAINEL ADMIN -->
+    <div id="admin-panel">
+      <div class="admin-title">Painel Admin — Adicionar Relatório</div>
+      <div class="admin-form">
+        <div class="field">
+          <label>Título do relatório</label>
+          <input type="text" id="new-title" placeholder="Ex: Análise Semanal — Jun W2" />
+        </div>
+        <div class="field">
+          <label>Período</label>
+          <input type="text" id="new-period" placeholder="Ex: 09–13 Jun 2026" />
+        </div>
+        <div class="field field-full">
+          <label>Link do relatório (URL do HTML no GitHub)</label>
+          <input type="url" id="new-url" placeholder="https://relatorios.rayabr.com/relatorios/nome-do-arquivo.html" />
+        </div>
+        <div class="field field-full" style="display:flex;align-items:flex-end;gap:.8rem">
+          <div style="flex:1">
+            <label>Tag / Categoria</label>
+            <input type="text" id="new-tag" placeholder="Ex: Mercado, Macro, VIVA..." />
+          </div>
+          <button class="btn-add" onclick="adicionarRelatorio()">+ Adicionar</button>
+        </div>
+      </div>
+      <p class="admin-success" id="admin-success">✓ Relatório adicionado com sucesso!</p>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filters" id="filters">
+      <button class="filter-btn active" onclick="filtrar('todos', this)">Todos</button>
+    </div>
+
+    <!-- LISTA -->
+    <div id="reports-list">
+      <div class="loading">Carregando relatórios...</div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── SUPABASE ──────────────────────────────────────────
+const { createClient } = supabase;
+const sb = createClient(
+  'https://vnkliecooedtueehcvpo.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZua2xpZWNvb2VkdHVlZWhjdnBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNzYwNTMsImV4cCI6MjA5NjY1MjA1M30.yxzLt-DgKUpoFFGW5-bb0HLAHqPf7A-GhC38nAqbww0'
+);
+
+// ── ADMIN EMAILS ──────────────────────────────────────
+// Adicione aqui os e-mails que terão acesso admin
+const ADMINS = ['marzia.petrucci@rayabr.com', 'francesca.brasileiro@rayabr.com', 'natalia.cysne@rayabr.com'];
+
+let currentUser = null;
+let isAdmin = false;
+let allReports = [];
+let activeTag = 'todos';
+
+// ── AUTH ──────────────────────────────────────────────
+async function fazerLogin() {
+  const email = document.getElementById('email').value.trim();
+  const pass  = document.getElementById('password').value;
+  const btn   = document.getElementById('login-btn');
+  const err   = document.getElementById('login-error');
+
+  err.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Entrando...';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+  if (error) {
+    err.textContent = 'E-mail ou senha incorretos.';
+    err.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+    return;
+  }
+
+  entrarNoApp(data.user);
+}
+
+function entrarNoApp(user) {
+  currentUser = user;
+  isAdmin = ADMINS.includes(user.email);
+
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('user-email-badge').textContent = user.email;
+
+  if (isAdmin) {
+    document.getElementById('admin-panel').style.display = 'block';
+    document.querySelectorAll('.report-delete').forEach(b => b.style.display = 'block');
+  }
+
+  carregarRelatorios();
+}
+
+async function sair() {
+  await sb.auth.signOut();
+  location.reload();
+}
+
+// Verifica sessão ao carregar
+// Carrega relatórios direto sem login
+carregarRelatorios();
+
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) {
+    currentUser = data.session.user;
+    isAdmin = ADMINS.includes(currentUser.email);
+    document.getElementById('user-email-badge').textContent = currentUser.email;
+    if (isAdmin) {
+      document.getElementById('admin-panel').style.display = 'block';
+      document.querySelectorAll('.report-delete').forEach(b => b.style.display = 'block');
+    }
+  }
+});
+
+// Enter no login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
+    fazerLogin();
+  }
+});
+
+// ── RELATÓRIOS ────────────────────────────────────────
+async function carregarRelatorios() {
+  const { data, error } = await sb
+    .from('relatorios')
+    .select('*')
+    .order('date', { ascending: false, nullsFirst: false });
+
+  if (error) {
+    document.getElementById('reports-list').innerHTML =
+      '<div class="empty-state"><div class="icon">⚠</div><p>Erro ao carregar relatórios.</p></div>';
+    return;
+  }
+
+  allReports = data || [];
+  construirFiltros();
+  renderizarLista(allReports);
+}
+
+function construirFiltros() {
+  const tags = ['todos', ...new Set(allReports.map(r => r.tag).filter(Boolean))];
+  const container = document.getElementById('filters');
+  container.innerHTML = tags.map(t =>
+    `<button class="filter-btn ${t === activeTag ? 'active' : ''}" onclick="filtrar('${t}', this)">${t === 'todos' ? 'Todos' : t}</button>`
+  ).join('');
+}
+
+function filtrar(tag, btn) {
+  activeTag = tag;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const lista = tag === 'todos' ? allReports : allReports.filter(r => r.tag === tag);
+  renderizarLista(lista);
+}
+
+function renderizarLista(lista) {
+  const container = document.getElementById('reports-list');
+  if (!lista.length) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📄</div><p>Nenhum relatório disponível ainda.</p></div>';
+    return;
+  }
+
+  container.innerHTML = lista.map(r => `
+    <a class="report-card" href="${r.url}" target="_blank">
+      <div class="report-info">
+        ${r.tag ? `<span class="report-tag">${r.tag}</span>` : ''}
+        <div class="report-title">${r.title}</div>
+        <div class="report-date">${r.period || formatarData(r.date || r.created_at)}</div>
+      </div>
+      <span class="report-arrow">→</span>
+      ${isAdmin ? `<button class="report-delete" onclick="deletar(event,'${r.id}')" title="Remover">✕</button>` : ''}
+    </a>
+  `).join('');
+}
+
+function formatarData(iso) {
+  return new Date(iso).toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+async function adicionarRelatorio() {
+  const title  = document.getElementById('new-title').value.trim();
+  const period = document.getElementById('new-period').value.trim();
+  const url    = document.getElementById('new-url').value.trim();
+  const tag    = document.getElementById('new-tag').value.trim();
+
+  if (!title || !url) { alert('Preencha pelo menos o título e o link.'); return; }
+
+  const { error } = await sb.from('relatorios').insert([{ title, period, url, tag }]);
+
+  if (error) { alert('Erro ao salvar: ' + error.message); return; }
+
+  // Limpa campos
+  ['new-title','new-period','new-url','new-tag'].forEach(id => document.getElementById(id).value = '');
+
+  const ok = document.getElementById('admin-success');
+  ok.style.display = 'block';
+  setTimeout(() => ok.style.display = 'none', 3000);
+
+  carregarRelatorios();
+}
+
+async function deletar(e, id) {
+  e.preventDefault();e.stopPropagation();
+  if (!confirm('Remover este relatório da lista?')) return;
+  await sb.from('relatorios').delete().eq('id', id);
+  carregarRelatorios();
+}
+</script>
+</body>
+</html>
