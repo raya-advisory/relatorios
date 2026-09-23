@@ -36,15 +36,17 @@ body{
   min-height:100vh;
 }
 
-/* ── LOGIN ───────────────────────────────────────────── */
+/* ── LOGIN (modal opcional, só pra admin) ────────────── */
 #login-screen{
-  display:none !important;
-}
-  min-height:100vh;
-  display:flex;align-items:center;justify-content:center;
+  display:none;
+  position:fixed;inset:0;
+  z-index:200;
+  align-items:center;justify-content:center;
   padding:2rem;
-  position:relative;overflow:hidden;
+  overflow:hidden;
+  background:rgba(8,14,17,.92);
 }
+#login-screen.open{display:flex}
 #login-screen::before{
   content:'';position:absolute;
   top:-150px;right:-150px;
@@ -62,12 +64,20 @@ body{
 .login-card{
   position:relative;z-index:1;
   width:100%;max-width:400px;
-  background:rgba(255,255,255,.03);
+  background:var(--dark-mid);
   border:1px solid var(--border);
   border-radius:16px;
   padding:2.8rem 2.4rem;
   display:flex;flex-direction:column;gap:1.3rem;
 }
+.login-close{
+  position:absolute;top:1rem;right:1rem;
+  background:none;border:none;
+  color:var(--text-dim);font-size:16px;
+  cursor:pointer;line-height:1;padding:.3rem;
+  transition:color .15s;
+}
+.login-close:hover{color:var(--text)}
 .login-logo{text-align:center;margin-bottom:.4rem}
 .login-logo img{
   width:72px;height:72px;
@@ -125,7 +135,7 @@ body{
   text-align:center;display:none;
 }
 
-/* ── APP (após login) ────────────────────────────────── */
+/* ── APP ─────────────────────────────────────────────── */
 #app{display:block}
 
 /* ── HEADER ──────────────────────────────────────────── */
@@ -141,6 +151,12 @@ header{
 .header-brand .name{font-size:15px;font-weight:700;color:var(--copper);letter-spacing:.1em}
 .header-brand .sub{font-size:10px;color:var(--teal-light);letter-spacing:.15em;text-transform:uppercase}
 .header-right{display:flex;align-items:center;gap:1rem}
+.admin-link{
+  font-size:12px;font-weight:600;font-family:var(--font);
+  color:var(--text-dim);text-decoration:none;
+  letter-spacing:.05em;transition:color .15s;
+}
+.admin-link:hover{color:var(--teal-light)}
 .user-badge{
   font-size:12px;color:var(--text-dim);
   background:rgba(255,255,255,.05);
@@ -259,7 +275,6 @@ main{max-width:900px;margin:0 auto;padding:2.5rem 2rem}
   background:none;border:none;cursor:pointer;
   color:rgba(224,92,92,.4);font-size:16px;
   padding:.25rem;transition:color .15s;flex-shrink:0;
-  display:none;
 }
 .report-delete:hover{color:#e05c5c}
 
@@ -288,16 +303,17 @@ main{max-width:900px;margin:0 auto;padding:2.5rem 2rem}
 </head>
 <body>
 
-<!-- ══ LOGIN ══════════════════════════════════════════ -->
+<!-- ══ LOGIN (modal, só abre se clicar em "Área Admin") ══ -->
 <div id="login-screen">
   <div class="login-card">
+    <button class="login-close" onclick="fecharLogin()" aria-label="Fechar">✕</button>
     <div class="login-logo">
       <img src="mono_umaCORescuro.png" alt="Raya Advisory" />
       <span class="brand">RAYA</span>
       <span class="brand-sub">Advisory</span>
     </div>
-    <p class="login-title">Relatórios Semanais</p>
-    <p class="login-sub">Área exclusiva para clientes</p>
+    <p class="login-title">Área Administrativa</p>
+    <p class="login-sub">Login exclusivo para administradoras</p>
     <div class="field">
       <label for="email">E-mail</label>
       <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" />
@@ -311,7 +327,7 @@ main{max-width:900px;margin:0 auto;padding:2.5rem 2rem}
   </div>
 </div>
 
-<!-- ══ APP ════════════════════════════════════════════ -->
+<!-- ══ APP (sempre visível — leitura é pública) ══════════ -->
 <div id="app">
 
   <header>
@@ -323,8 +339,9 @@ main{max-width:900px;margin:0 auto;padding:2.5rem 2rem}
       </div>
     </div>
     <div class="header-right">
-      <span class="user-badge" id="user-email-badge"></span>
-      <button class="btn-logout" onclick="sair()">Sair →</button>
+      <a href="#" class="admin-link" id="admin-link" onclick="abrirLogin();return false;">Área Admin</a>
+      <span class="user-badge" id="user-email-badge" style="display:none"></span>
+      <button class="btn-logout" id="btn-logout" style="display:none" onclick="sair()">Sair →</button>
     </div>
   </header>
 
@@ -332,7 +349,7 @@ main{max-width:900px;margin:0 auto;padding:2.5rem 2rem}
     <h1 class="page-title">Relatórios Semanais</h1>
     <p class="page-sub" id="page-sub">Acompanhe as análises e atualizações de mercado.</p>
 
-    <!-- PAINEL ADMIN -->
+    <!-- PAINEL ADMIN (só aparece logada) -->
     <div id="admin-panel">
       <div class="admin-title">Painel Admin — Adicionar Relatório</div>
       <div class="admin-form">
@@ -388,6 +405,16 @@ let isAdmin = false;
 let allReports = [];
 let activeTag = 'todos';
 
+// ── LOGIN MODAL ───────────────────────────────────────
+function abrirLogin() {
+  document.getElementById('login-screen').classList.add('open');
+  document.getElementById('email').focus();
+}
+function fecharLogin() {
+  document.getElementById('login-screen').classList.remove('open');
+  document.getElementById('login-error').style.display = 'none';
+}
+
 // ── AUTH ──────────────────────────────────────────────
 async function fazerLogin() {
   const email = document.getElementById('email').value.trim();
@@ -401,31 +428,34 @@ async function fazerLogin() {
 
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
 
+  btn.disabled = false;
+  btn.textContent = 'Entrar';
+
   if (error) {
     err.textContent = 'E-mail ou senha incorretos.';
     err.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = 'Entrar';
     return;
   }
 
-  entrarNoApp(data.user);
+  fecharLogin();
+  aplicarSessao(data.user);
+  // Re-renderiza a lista já carregada pra exibir os botões de admin (excluir, etc.)
+  const lista = activeTag === 'todos' ? allReports : allReports.filter(r => r.tag === activeTag);
+  renderizarLista(lista);
 }
 
-function entrarNoApp(user) {
+function aplicarSessao(user) {
   currentUser = user;
   isAdmin = ADMINS.includes(user.email);
 
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
+  document.getElementById('admin-link').style.display = 'none';
+  document.getElementById('user-email-badge').style.display = 'inline-block';
   document.getElementById('user-email-badge').textContent = user.email;
+  document.getElementById('btn-logout').style.display = 'inline-block';
 
   if (isAdmin) {
     document.getElementById('admin-panel').style.display = 'block';
-    document.querySelectorAll('.report-delete').forEach(b => b.style.display = 'block');
   }
-
-  carregarRelatorios();
 }
 
 async function sair() {
@@ -433,28 +463,28 @@ async function sair() {
   location.reload();
 }
 
-// Verifica sessão ao carregar
-// Carrega relatórios direto sem login
-carregarRelatorios();
-
-sb.auth.getSession().then(({ data }) => {
-  if (data.session) {
-    currentUser = data.session.user;
-    isAdmin = ADMINS.includes(currentUser.email);
-    document.getElementById('user-email-badge').textContent = currentUser.email;
-    if (isAdmin) {
-      document.getElementById('admin-panel').style.display = 'block';
-      document.querySelectorAll('.report-delete').forEach(b => b.style.display = 'block');
-    }
-  }
-});
-
-// Enter no login
+// Enter no modal de login
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
+  if (e.key === 'Enter' && document.getElementById('login-screen').classList.contains('open')) {
     fazerLogin();
   }
 });
+// Fecha o modal clicando fora do card
+document.getElementById('login-screen').addEventListener('click', e => {
+  if (e.target.id === 'login-screen') fecharLogin();
+});
+
+// ── INICIALIZAÇÃO ─────────────────────────────────────
+// Primeiro resolve a sessão (se houver), só depois busca os relatórios —
+// evita o race condition de carregar a lista antes da sessão ser restaurada.
+async function init() {
+  const { data } = await sb.auth.getSession();
+  if (data.session) {
+    aplicarSessao(data.session.user);
+  }
+  carregarRelatorios();
+}
+init();
 
 // ── RELATÓRIOS ────────────────────────────────────────
 async function carregarRelatorios() {
